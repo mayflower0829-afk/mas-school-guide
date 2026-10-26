@@ -5,6 +5,15 @@ const CMP_KEY = 'masChoice.compare.v1';
 
 const TIER_COLORS = { '985': '#4F6EF2', '211': '#8B5CF6', '双一流': '#10B981', '双非': '#8A92A6' };
 
+// 数据源里的层次存在 "211/双一流"、"985/双一流" 组合写法，统一取最高层次
+function normTier(t) {
+  const s = String(t || '');
+  if (s.includes('985')) return '985';
+  if (s.includes('211')) return '211';
+  if (s.includes('双一流')) return '双一流';
+  return '双非';
+}
+
 let compare = [];          // 参与对比的校名，最多 3 所
 const charts = {};
 
@@ -60,7 +69,7 @@ function applyFilters() {
   const list = getData().schools.filter((s) => {
     if (f.q && !String(s.school).toLowerCase().includes(f.q)) return false;
     if (f.province && s.province !== f.province) return false;
-    if (f.tier && s.tier !== f.tier) return false;
+    if (f.tier && normTier(s.tier) !== f.tier) return false;
     if (f.verified && !s.verified) return false;
     if (f.band) {
       const v = s.line2025;
@@ -102,7 +111,7 @@ function renderList() {
     return `<div class="school-card">
       <div class="s-top">
         <span class="s-name">${esc(s.school)}</span>
-        <span class="s-tier" style="background:${tc}">${esc(s.tier || '')}</span>
+        <span class="s-tier" style="background:${tc}">${esc(normTier(s.tier))}</span>
         ${s.verified ? '<span class="s-verified">✓ 已核实</span>' : '<span class="s-unverified">单一来源</span>'}
       </div>
       <div class="s-lines">
@@ -159,7 +168,7 @@ function renderCompare() {
       ? `<td class="cmp-val" style="color:${lineColor(s.line2025)}">${s.line2025}</td>` : '<td>—</td>'],
     ['2024 复试线', (s) => typeof s.line2024 === 'number' ? `<td class="cmp-val">${s.line2024}</td>` : '<td>—</td>'],
     ['两年变化', diffCell],
-    ['层次', (s) => `<td>${esc(s.tier || '—')}</td>`],
+    ['层次', (s) => `<td>${esc(normTier(s.tier))}</td>`],
     ['城市', (s) => `<td>${esc([s.city, s.province].filter(Boolean).join(' · ') || '—')}</td>`],
     ['初试外语', (s) => `<td>${esc(s.lang || '—')}</td>`],
     ['专业课', (s) => `<td>${esc(s.proCourse || '432统计学')}</td>`],

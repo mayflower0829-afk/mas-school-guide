@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0E7A5F">
+  <meta name="description" content="应统择校 — 应用统计专硕（0252）择校数据平台：复试线、初试科目、参考书风格，逐条标注来源，可筛选对比。">
+  <title>应统择校 · 应用统计专硕择校数据平台</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230E7A5F'/><text x='50' y='68' font-size='46' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>统</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="appHeader">
+  <div class="brand">
+    <h1>应统择校 <span class="en">MAS Choice</span></h1>
+    <span class="sub">应用统计专硕（0252）· 复试线 / 科目 / 参考书，逐条标注来源</span>
+  </div>
+</header>
+
+<nav id="tabnav">
+  <button data-tab="list" class="active">择校表</button>
+  <button data-tab="compare">对比</button>
+  <button data-tab="trend">分数线趋势</button>
+  <button data-tab="about">数据说明</button>
+</nav>
+
+<main id="main">
+
+  <!-- ========== 择校表 ========== -->
+  <section id="tab-list" class="tab active">
+    <div class="card filter-bar">
+      <input type="search" id="fSearch" placeholder="搜索校名…">
+      <div class="filter-row">
+        <select id="fProvince"><option value="">全部地区</option></select>
+        <select id="fTier">
+          <option value="">全部层次</option>
+          <option>985</option><option>211</option><option>双一流</option><option>双非</option>
+        </select>
+        <select id="fLine">
+          <option value="">分数不限</option>
+          <option value="380">2025线 ≥ 380</option>
+          <option value="360">360 – 379</option>
+          <option value="340">340 – 359</option>
+          <option value="lt340">&lt; 340</option>
+        </select>
+        <select id="fSort">
+          <option value="lineDesc">2025线 降序</option>
+          <option value="lineAsc">2025线 升序</option>
+          <option value="name">按校名</option>
+        </select>
+      </div>
+      <label class="chk"><input type="checkbox" id="fVerified"> 只看已核实院校</label>
+    </div>
+    <div class="hint" id="listStats"></div>
+    <div id="schoolList"></div>
+  </section>
+
+  <!-- ========== 对比 ========== -->
+  <section id="tab-compare" class="tab">
+    <div class="card">
+      <div class="card-title">院校对比</div>
+      <p class="hint" id="compareHint">在「择校表」中勾选 2–3 所院校后即可对比。</p>
+    </div>
+    <div id="compareWrap"></div>
+  </section>
+
+  <!-- ========== 分数线趋势 ========== -->
+  <section id="tab-trend" class="tab">
+    <div class="card">
+      <div class="card-title">应用统计国家线（A区）走势</div>
+      <div id="chartNational" class="chart"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">各校复试线对比（2024 vs 2025）</div>
+      <p class="hint">仅绘制有复试线数据的院校；颜色代表院校层次。</p>
+      <div id="chartSchools" class="chart-tall"></div>
+    </div>
+  </section>
+
+  <!-- ========== 数据说明 ========== -->
+  <section id="tab-about" class="tab">
+    <div class="card">
+      <div class="card-title">数据说明</div>
+      <div class="hint" id="aboutBody"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">免责声明</div>
+      <div class="hint">
+        <p>· 本工具是信息整理与可视化助手，不是官方信息源。填报志愿前，请务必以目标院校研究生院官网的最新招生简章与复试通知为准。</p>
+        <p>· 复试线每年浮动，往年数据不构成对未来分数线的预测。</p>
+        <p>· 每条数据的来源链接都附在校名旁，发现出入请以官网为准。</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="compareBar" hidden>
+  <span>已选 <b id="cmpCount">0</b> / 3 所</span>
+  <button class="btn small primary" id="btnGoCompare">去对比</button>
+  <button class="btn small ghost" id="btnClearCompare">清空</button>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script src="echarts.min.js?v=1"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
